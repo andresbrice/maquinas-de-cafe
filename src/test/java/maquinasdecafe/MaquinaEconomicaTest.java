@@ -1,0 +1,70 @@
+package maquinasdecafe;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class MaquinaEconomicaTest {
+  MaquinaDeCafe maquina;
+
+  @Before
+  public void setup() {
+    maquina = new MaquinaEconomica();
+  }
+
+  @Test
+  public void queDevuelveUnVasoAlServir() {
+    VasoDeCafe vaso = maquina.servirCafe();
+    Assert.assertNotNull(vaso);
+  }
+
+  @Test
+  public void quePuedaServirUnCafe() {
+    maquina.servirCafe();
+    Assert.assertTrue(maquina.puedeServir());
+  }
+
+  @Test
+  public void queNoRestaAntesDelTercero() {
+    maquina.servirCafe();
+    maquina.servirCafe();
+    assertEquals(1000, maquina.getGramosDeCafe());
+  }
+
+  @Test
+  public void queRestaDespuesDelTercero() {
+    maquina.servirCafe();
+    maquina.servirCafe();
+    maquina.servirCafe();
+    assertEquals(1000 - 10, maquina.getGramosDeCafe());
+  }
+
+  @Test
+  public void queSeAgotaElCafe() {
+    for (int i = 0; i < 300; i++) {
+      maquina.servirCafe();
+    }
+    Assert.assertFalse(maquina.puedeServir());
+  }
+
+  @Test
+  public void queNoSeAgotaElCafe() {
+    VasoDeCafe vaso = null;
+
+    for (int i = 0; i < 299; i++) {
+      vaso = maquina.servirCafe();
+    }
+    Assert.assertTrue(vaso.estaLleno());
+  }
+
+  @Test
+  public void queLuegoDeAgotarElCafeSirveVasoVacio() {
+    for (int i = 0; i < 300; i++) {
+      maquina.servirCafe();
+    }
+    VasoDeCafe vaso = maquina.servirCafe();
+    Assert.assertFalse(vaso.estaLleno());
+  }
+}
